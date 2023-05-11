@@ -1,32 +1,45 @@
 // Buena suerte!
 
-var map = L.map("map", { center: [51.505, -0.09], zoom: 13 });
-let ipInput = document.querySelector(".ip-input");
-let infoFieldsArray = document.querySelectorAll(".info-field");
-let ip = "46.253.43.17";
-let buttonForm = document.querySelector("form");
 
-L.tileLayer('https://tile.openstreetmap.org/%7Bz%7D/%7Bx%7D/%7By%7D.png', {
+//londres
+const map = L.map('map').setView([51.505, -0.09], 13);
+
+const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright%22%3EOpenStreetMap</a>'
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-function getDirection(event){
-    event.preventDefault()
+let ipInput = document.querySelector("#ip-input");
+let infoFieldsArray = document.querySelectorAll(".info-field");
+let buttonForm = document.querySelector("form");
 
+
+
+function getDirection(event){
+    event.preventDefault();
+    const ip=ipInput.value;
+    if(ip===""){
+        alert("Ingrese una IP")
+        return
+    }
     let appUrl = `https://ipapi.co/${ip}/json`;
-    console.log("hola");
+
+
     fetch(appUrl)
     .then(response => response.json())
     .then(data =>{
+        if(data.error){
+            alert("IP no encontrada")
+            return
+        } 
         infoFieldsArray[0].textContent = data.ip
         infoFieldsArray[1].textContent = `${data.country_name}, ${data.city}, ${data.postal}`
-        infoFieldsArray[2].textContent = data.utc_offset
+        infoFieldsArray[2].textContent =  data.utc_offset<0 ? `UTC+${data.utc_offset*-1*100/10000}`:`UTC+${data.utc_offset*100/10000}`
         infoFieldsArray[3].textContent = data.org
-        console.log(data)
-    })
 
+        L.marker([data.latitude, data.longitude]).addTo(map);
+        map.setView([data.latitude, data.longitude], 13);
+    })
 }
 
 buttonForm.addEventListener("submit", getDirection);
-event.preventDefault()

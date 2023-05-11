@@ -79,6 +79,7 @@ button[type="submit"]:hover {
 
     display: flex;
     justify-content: space-between;
+ 
 }
 
 .box {
@@ -105,8 +106,9 @@ button[type="submit"]:hover {
 
 .info-field {
     margin-top: .7rem;
-    font-weight: 500;
+    font-weight: bolder;
     letter-spacing: .2px;
+    font-size: 1.3rem;
 }
 
 #modal {
@@ -144,6 +146,7 @@ button[type="submit"]:hover {
 
 #map {
     height: 70vh;
+    width: 100%;
 }
 
 .footer {
